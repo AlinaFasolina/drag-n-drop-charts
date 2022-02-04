@@ -1,0 +1,66 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+      .sidebar-icon {
+        @apply relative flex items-center justify-center 
+        h-12 w-12 mt-2 mb-2 mx-auto  
+      bg-gray-400 hover:bg-light-400 dark:bg-night-100 dark:hover:bg-green-600
+      text-light-400 hover:text-white dark:text-green-500 dark:hover:text-night-100
+        hover:rounded-xl rounded-3xl
+        transition-all duration-300 ease-linear
+        cursor-pointer shadow-lg z-[100];
+      }
+
+      /* We can't use the hover utility to show tooltip since it's impossible to hover over
+      an invisible class. So we apply group. But group-hover doesn't work in @apply */
+      .sidebar-tooltip {
+        @apply absolute w-auto p-2 m-2 min-w-max left-14 rounded-md shadow-md
+        text-white bg-gray-900 
+        text-xs font-bold 
+        transition-all duration-100 scale-0 origin-left;
+      }
+
+      .sidebar-hr {
+        @apply bg-gray-200 dark:bg-gray-800 
+        border border-gray-200 dark:border-gray-800 rounded-full
+        mx-2;
+      }
+
+
+      .top-navigation-icon {
+        @apply relative flex items-center justify-center 
+        h-8 w-8 mt-4 mb-5 mx-auto
+        text-gray-500 hover:text-red-600
+        transition duration-300 ease-in-out 
+        cursor-pointer shadow-lg ;
+      }
+
+      .faq-header {
+        @apply flex justify-between w-full px-4 py-2 font-bold text-left text-2xl
+        text-light-400 dark:text-night-400 bg-light-200 dark:bg-night-200 
+        rounded-lg hover:bg-purple-200 focus:outline-none focus-visible:ring focus-visible:ring-purple-500 
+        focus-visible:ring-opacity-75
+      }
+
+      .faq-answer {
+        @apply px-4 pt-4 pb-2 text-lg text-light-300 dark:text-night-300 font-sans
+      }
+
+      .text-normal {
+        @apply text-light-400 dark:text-night-400
+      }
+
+      .text-contrast {
+        @apply text-light-300 dark:text-night-300
+      }
+      
+      .bg-base {
+        @apply bg-light-100 dark:bg-night-100
+      }
+
+      .bg-component {
+        @apply bg-light-200 dark:bg-night-200
+      }
+}
