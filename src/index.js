@@ -21,8 +21,8 @@ const rootElement = document.getElementById('root')
 
 render(
   <Auth0Provider
-    domain="dev-c6rhjtdt.us.auth0.com"
-    clientId="XIKUWQFlSUXfU6pNW0NM1NHuCtOA284c"
+    domain=""
+    clientId=""
     redirectUri={window.location.origin}>
     <Router>
       <Routes>
