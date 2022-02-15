@@ -1,5 +1,6 @@
 import { Helmet } from "react-helmet";
 import ChartGrid from "../components/ChartGrid";
+import ToolboxLayout from "../components/ToolboxLayout/ToolboxLayout";
 import Disclaimer from "../components/Disclaimer"
 import { useAuth0 } from "@auth0/auth0-react";
 import HashLoader from "react-spinners/HashLoader";
@@ -15,6 +16,8 @@ if (currHr < 12) {
 } else {
   greeting += "evening"
 }
+
+
 
 export default function Dashboard({ text = 'satoshi' }) {
   const { user, isAuthenticated, isLoading } = useAuth0();
@@ -53,12 +56,13 @@ export default function Dashboard({ text = 'satoshi' }) {
 
 
       <section className="flex flex-auto flex-col h-full overflow-hidden px-1">
-
-        <ChartGrid />
-      
+        {/* <ChartGrid />  */}
+        <ToolboxLayout />
       </section>
 
     </div>
+
+
     </>
   );
 };
