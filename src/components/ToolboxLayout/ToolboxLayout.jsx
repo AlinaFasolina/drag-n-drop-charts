@@ -6,6 +6,9 @@ import { C01 } from "../charts/RiskGauge";
 import { T1 } from "../charts/SimpleStockChart";
 import { T3 } from "../charts/Spline";
 import './ToolboxLayout.css';
+import 'ui-neumorphism/dist/index.css'
+import SlideToggle from "react-slide-toggle";
+
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
 function getFromLS(key) {
@@ -48,7 +51,6 @@ class ToolBox extends React.Component {
   render() {
     return (
       <div className="toolbox">
-        <span className="toolbox__title">Toolbox</span>
         <div className="toolbox__items-wrapper">
           {this.props.items.map(item => (
             <ToolBoxItem
@@ -79,12 +81,13 @@ export default class ToolboxLayout extends React.Component {
 
   state = {
     currentBreakpoint: "lg",
+    isToolboxOpened: false,
     compactType: "vertical",
     mounted: false,
     // layouts: { lg: this.props.initialLayout },
     toolbox: { lg: [{ i: "am", x: 0, y: 0, w: 3, h: 6, minW: 2, minH: 3, title:C01.title.text, chartType: "C01" }] },
     charts: [
-      // { i: "a", x: 0, y: 0, w: 3, h: 6, minW: 2, minH: 3, title:C01.title.text, chartType: "C01" },
+      { i: "a", x: 0, y: 0, w: 3, h: 6, minW: 2, minH: 3, title:C01.title.text, chartType: "C01" },
       { i: "b", x: 3, y: 0, w: 3, h: 6, minW: 2, minH: 3, title:T1.title.text, chartType: "T1" },
       { i: "c", x: 6, y: 0, w: 3, h: 6, minW: 2, minH: 3, title:C01.title.text, chartType: "C01" },
       { i: "d", x: 0, y: 0, w: 3, h: 6, minW: 2, minH: 3, title:T1.title.text, chartType: "T1" },
@@ -180,41 +183,58 @@ export default class ToolboxLayout extends React.Component {
     this.onLayoutChange(item);
   } 
 
-  render() {
-    return (
-      <div>
-        <ToolBox
-          items={this.state.toolbox[this.state.currentBreakpoint] || []}
-          onTakeItem={this.onTakeItem}
-        />
 
-        <ResponsiveReactGridLayout
-          {...this.props}
-          // layouts={this.state.layouts}
-          onBreakpointChange={this.onBreakpointChange}
-          onLayoutChange={this.onLayoutChange}
-          measureBeforeMount={false}
-          useCSSTransforms={this.state.mounted}
-          compactType={this.state.compactType}
-          preventCollision={!this.state.compactType}
-        >
-        {this.state.charts.map((item, index) => {
-          let { i, chartType, ...dataGrid } = item;
-          return (
-            <div key={i} data-grid={{ ...dataGrid }}>
-              <div className="hide-button"
-                onClick={this.combinedFunction.bind(this,item)}>
-                &times;
-              </div>
-              <Chart
-                resizeDone={this.resizeChartDone}
-                chartType={chartType}
+  render() {
+    const { toggleEvent } = this.props;
+    return (
+      <>
+        <div>
+          <SlideToggle toggleEvent={toggleEvent} collapsed>
+            {({ setCollapsibleElement }) => (
+              <div className="my-collapsible">
+                <div
+                  className="my-collapsible__content"
+                  ref={setCollapsibleElement}
+                >
+                  <div className="my-collapsible__content-inner">
+                  <ToolBox
+                items={this.state.toolbox[this.state.currentBreakpoint] || []}
+              onTakeItem={this.onTakeItem}
               />
-            </div>
-          );
-        })}  
-        </ResponsiveReactGridLayout>
-      </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </SlideToggle>
+
+          <ResponsiveReactGridLayout
+            {...this.props}
+            // layouts={this.state.layouts}
+            onBreakpointChange={this.onBreakpointChange}
+            onLayoutChange={this.onLayoutChange}
+            measureBeforeMount={false}
+            useCSSTransforms={this.state.mounted}
+            compactType={this.state.compactType}
+            preventCollision={!this.state.compactType}
+          >
+          {this.state.charts.map((item, index) => {
+            let { i, chartType, ...dataGrid } = item;
+            return (
+              <div key={i} data-grid={{ ...dataGrid }}>
+                <div className="hide-button"
+                  onClick={this.combinedFunction.bind(this,item)}>
+                  &times;
+                </div>
+                <Chart
+                  resizeDone={this.resizeChartDone}
+                  chartType={chartType}
+                />
+              </div>
+            );
+          })}  
+          </ResponsiveReactGridLayout>
+        </div>
+      </>
     );
   }
 }
