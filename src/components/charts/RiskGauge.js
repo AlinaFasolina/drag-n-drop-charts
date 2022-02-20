@@ -13,7 +13,7 @@ export const C01 = {
     },
     
     title: {
-        text: 'Risk Level',
+        text: 'Risk Gauge',
     },
     pane: {
         center: ['50%', '70%'],

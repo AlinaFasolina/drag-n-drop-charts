@@ -1,10 +1,8 @@
 import { Helmet } from "react-helmet";
 import ChartGrid from "../components/ChartGrid";
 import ToolboxLayout from "../components/ToolboxLayout/ToolboxLayout";
-import Disclaimer from "../components/Disclaimer"
 import { useAuth0 } from "@auth0/auth0-react";
 import HashLoader from "react-spinners/HashLoader";
-import { Fab } from 'ui-neumorphism'
 import { useState } from "react";
 
 // Move the "good morning satoshi" code here.
@@ -57,11 +55,10 @@ export default function Dashboard({ text = 'satoshi' }) {
         </h1>
 
 
-        <div className="p-5">
-          <Fab onClick={onToggle} style={{ margin: '20px' }}>
-            <span style={{ fontSize: '30px', margin: '2px 0px 0px 2px' }}>&#43;</span>
-          </Fab>
-          {/* <Disclaimer /> */}
+        <div className="p-5 cursor-pointer" onClick={onToggle}>
+          <div className="w-14 h-14 rounded-full shadow-[0_1px_1px_3px_rgba(23,26,42,1)] flex items-center justify-center">
+            <span className="text-3xl text-light-300 dark:text-night-400">&#43;</span>
+          </div>
         </div>
 
       </section>

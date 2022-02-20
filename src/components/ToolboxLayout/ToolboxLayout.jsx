@@ -5,7 +5,6 @@ import Chart from "../Chart";
 import { C01 } from "../charts/RiskGauge";
 import { T1 } from "../charts/SimpleStockChart";
 import { T3 } from "../charts/Spline";
-import './ToolboxLayout.css';
 import 'ui-neumorphism/dist/index.css'
 import SlideToggle from "react-slide-toggle";
 

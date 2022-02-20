@@ -63,4 +63,19 @@
       .bg-component {
         @apply bg-light-200 dark:bg-night-200
       }
+
+      .toolbox__item {
+        @apply flex border-light-400 dark:border-night-400 border-2
+        text-light-300 dark:text-white font-semibold
+        rounded-md px-2 py-1 mr-2 cursor-pointer 
+      }
+      .toolbox__items-wrapper {
+          @apply flex
+      }
+      .toolbox {
+          @apply mb-5 p-4 bg-light-200 dark:bg-night-200
+      }
+      .hide-button {
+          @apply absolute text-2xl w-4 m-0 -top-1.5 text-white right-5
+      }
 }
