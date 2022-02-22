@@ -10,7 +10,8 @@ import SlideToggle from "react-slide-toggle";
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
-function getFromLS(key) {
+// get layouts from LS
+function getLayoutsFromLS(key) {
   let ls = {};
   if (global.localStorage) {
     try {
@@ -22,7 +23,8 @@ function getFromLS(key) {
   return ls[key];
 }
 
-function saveToLS(key, value) {
+// save layouts to LS
+function saveLayoutsToLS(key, value) {
   if (global.localStorage) {
     global.localStorage.setItem(
       "layout",
@@ -32,6 +34,32 @@ function saveToLS(key, value) {
     );
   }
 }
+
+// get toolboxes from LS
+function getToolboxFromLS(key) {
+  let ls = {};
+  if (global.localStorage) {
+    try {
+      ls = JSON.parse(global.localStorage.getItem("toolbox")) || {};
+    } catch (e) {
+      /*Ignore*/
+    }
+  }
+  return ls[key];
+}
+
+// save toolboxes to LS
+function saveToolboxToLS(key, value) {
+  if (global.localStorage) {
+    global.localStorage.setItem(
+      "toolbox",
+      JSON.stringify({
+        [key]: value
+      })
+    );
+  }
+}
+
 
 class ToolBoxItem extends React.Component {
   render() {
@@ -70,7 +98,6 @@ export default class ToolboxLayout extends React.Component {
     rowHeight: 40,
     onLayoutChange: function() {},
     cols: { lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 },
-    // initialLayout: generateLayout()
   };
   constructor(props) {
     super(props);
@@ -83,26 +110,33 @@ export default class ToolboxLayout extends React.Component {
     isToolboxOpened: false,
     compactType: "vertical",
     mounted: false,
-    // layouts: { lg: this.props.initialLayout },
-    toolbox: { lg: [{ i: "am", x: 0, y: 0, w: 3, h: 6, minW: 2, minH: 3, title:C01.title.text, chartType: "C01" }] },
-    charts: [
+    layouts: JSON.parse(JSON.stringify(getLayoutsFromLS("layouts") || {lg:[
       { i: "a", x: 0, y: 0, w: 3, h: 6, minW: 2, minH: 3, title:C01.title.text, chartType: "C01" },
       { i: "b", x: 3, y: 0, w: 3, h: 6, minW: 2, minH: 3, title:T1.title.text, chartType: "T1" },
       { i: "c", x: 6, y: 0, w: 3, h: 6, minW: 2, minH: 3, title:C01.title.text, chartType: "C01" },
       { i: "d", x: 0, y: 0, w: 3, h: 6, minW: 2, minH: 3, title:T1.title.text, chartType: "T1" },
       { i: "e", x: 3, y: 0, w: 3, h: 6, minW: 2, minH: 3, title:T3.title.text, chartType: "T3" },
       { i: "f", x: 6, y: 0, w: 3, h: 6, minW: 2, minH: 3, title:T3.title.text, chartType: "T3" },
+    ]})),
+    toolbox: JSON.parse(JSON.stringify(getToolboxFromLS("toolbox") ||  { lg: [{ i: "g", x: 0, y: 0, w: 3, h: 6, minW: 2, minH: 3, title:C01.title.text, chartType: "C01" }] })),
+
+   //basicCharts array is not rendering. It's used only in "addChartTypeToArray" function to get proper "chartType" field. We render layouts and toolbox arrays.
+    basicCharts: [
+      { i: "a", x: 0, y: 0, w: 3, h: 6, minW: 2, minH: 3, title:C01.title.text, chartType: "C01" },
+      { i: "b", x: 3, y: 0, w: 3, h: 6, minW: 2, minH: 3, title:T1.title.text, chartType: "T1" },
+      { i: "c", x: 6, y: 0, w: 3, h: 6, minW: 2, minH: 3, title:C01.title.text, chartType: "C01" },
+      { i: "d", x: 0, y: 0, w: 3, h: 6, minW: 2, minH: 3, title:T1.title.text, chartType: "T1" },
+      { i: "e", x: 3, y: 0, w: 3, h: 6, minW: 2, minH: 3, title:T3.title.text, chartType: "T3" },
+      { i: "f", x: 6, y: 0, w: 3, h: 6, minW: 2, minH: 3, title:T3.title.text, chartType: "T3" },
+      { i: "g", x: 0, y: 0, w: 3, h: 6, minW: 2, minH: 3, title:C01.title.text, chartType: "C01" }
     ]
   };
 
   componentDidMount() {
     this.setState({ mounted: true });
-    console.log('this.setState in componentDidMount ',this.state)
   }
 
   onBreakpointChange = breakpoint => {
-    console.log("onBreakpointChange function")
-
     this.setState(prevState => ({
       currentBreakpoint: breakpoint,
       toolbox: {
@@ -116,8 +150,6 @@ export default class ToolboxLayout extends React.Component {
   };
 
   onCompactTypeChange = () => {
-    console.log("onCompactTypeChange function")
-
     const { compactType: oldCompactType } = this.state;
     const compactType =
       oldCompactType === "horizontal"
@@ -128,60 +160,102 @@ export default class ToolboxLayout extends React.Component {
     this.setState({ compactType });
   };
 
-  onTakeItem = currentItem => {
+  // When user clicks on toolbox item
+  onTakeItem = item => {
+    const layoutsArray = this.state.layouts.lg;
+
+    /*add clicked toolbox item to "layouts" array*/
+    const newLayoutsArr = [...layoutsArray, item];
+
+    /*add "chartType" field to "layouts" array*/
+    let layoutsArrWithChartType= this.addChartTypeToArray(newLayoutsArr);
+
+    /*filter "toolbox" array so it's doesn't contain clicked toolbox item*/
+    const newToolboxArr = this.state.toolbox.lg.filter((chart)=> chart.i !== item.i);
+
+    /*add "chartType" field to "toolbox" array*/
+    let toolboxArrWithChartType= this.addChartTypeToArray(newToolboxArr);
+
+    /*update "layouts" and "toolbox" array in state to cause new render*/ 
     this.setState(prevState => {
       return {
         ...prevState,
-        charts: [...prevState.charts,currentItem],
         toolbox: {
-            lg: prevState.toolbox.lg.filter((item)=>item!==currentItem)
-          }
-      }
-    })
-  };
-
-  onLayoutChange(layout, layouts) {
-    saveToLS("layouts", layouts);
-    this.setState({ layouts });
-  }
-
-
-  
-  onPutItem = item => {
-    this.setState(prevState => {
-      return {
-        toolbox: {
-          ...prevState.toolbox,
-          [prevState.currentBreakpoint]: [
-            ...(prevState.toolbox[prevState.currentBreakpoint] || []),
-            item
-          ]
+          lg: toolboxArrWithChartType
+        },
+        layouts: {
+          lg: layoutsArrWithChartType          
         },
       };
     });
+
+    /*set "toolbox" array with "chartType" field to localstorage*/
+    saveToolboxToLS("toolbox", {lg:toolboxArrWithChartType});
+
+    /*set "layouts" array with "chartType" field to localstorage*/
+    saveLayoutsToLS("layouts", {lg:layoutsArrWithChartType});
+
   };
 
-  onLayoutChange = (clickedItem) => {
-    this.setState( (prevState) =>{
+  // Function wich converts array with no "chartType" field to array with "chartType" field
+  addChartTypeToArray = arr => {
+    let newArr = [];
+    arr.forEach((item)=> {
+      const finded = this.state.basicCharts.find((chart)=> chart.i === item.i)
+      newArr.push({...finded,...item})
+    })
+    return newArr
+  }
+
+  // When user clicks on cross inside card with chart
+  onPutItem = item => {
+    const layoutsArray = this.state.layouts.lg;
+
+    /*filter layouts array so it's doesnt contain closed chart card*/
+    const filteredLayoutsArray = layoutsArray.filter((chart)=>chart.i !== item.i)
+
+    /*add "chartType" field to filtered layouts array*/
+    let layoutsArrWithChartType= this.addChartTypeToArray(filteredLayoutsArray);
+
+    /*add closed card to toolbox array*/
+    let newToolboxArr = [...this.state.toolbox.lg,item];
+
+    /*add "chartType" field to toolbox array*/
+    let toolboxArrWithChartType= this.addChartTypeToArray(newToolboxArr);
+
+    /*update "layouts" and "toolbox" array in state to cause new render*/ 
+    this.setState(prevState => {
       return {
-      ...prevState,
-      charts:prevState.charts.filter((item)=>item !== clickedItem)
-      } 
-    } );
+        ...prevState,
+        layouts: {
+          lg: layoutsArrWithChartType          
+        },
+        toolbox: {
+          lg: toolboxArrWithChartType
+        },
+      };
+    });
+
+    /*set layouts array with "chartType" field to localstorage*/
+    saveLayoutsToLS("layouts", {lg:layoutsArrWithChartType});
+
+    /*set toolbox array with "chartType" field to localstorage*/
+    saveToolboxToLS("toolbox", {lg:toolboxArrWithChartType});
+
+  };
+
+  onLayoutChange = (layout, layouts) => {
+    /*add "chartType" field to array with changed cards positions*/
+    let arrWithChartType= this.addChartTypeToArray(layouts.lg);
+
+    /*set array with "chartType" field to localstorage*/
+    saveLayoutsToLS("layouts", {lg:arrWithChartType});
   };
 
   onNewLayout = () => {
-    console.log("onNewLayout function")
     this.setState({
     });
   };
-
-  combinedFunction = (item) => {
-    console.log('item in combinedFunction', item)
-    this.onPutItem(item)
-    this.onLayoutChange(item);
-  } 
-
 
   render() {
     const { toggleEvent } = this.props;
@@ -208,7 +282,7 @@ export default class ToolboxLayout extends React.Component {
 
           <ResponsiveReactGridLayout
             {...this.props}
-            // layouts={this.state.layouts}
+            layouts={this.state.layouts}
             onBreakpointChange={this.onBreakpointChange}
             onLayoutChange={this.onLayoutChange}
             measureBeforeMount={false}
@@ -216,12 +290,12 @@ export default class ToolboxLayout extends React.Component {
             compactType={this.state.compactType}
             preventCollision={!this.state.compactType}
           >
-          {this.state.charts.map((item, index) => {
+          {this.state.layouts.lg.map((item, index) => {
             let { i, chartType, ...dataGrid } = item;
             return (
               <div key={i} data-grid={{ ...dataGrid }}>
                 <div className="hide-button"
-                  onClick={this.combinedFunction.bind(this,item)}>
+                  onClick={this.onPutItem.bind(this,item)}>
                   &times;
                 </div>
                 <Chart
