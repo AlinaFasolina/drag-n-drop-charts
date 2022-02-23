@@ -103,6 +103,9 @@ export default class ToolboxLayout extends React.Component {
     super(props);
 
     this.onLayoutChange = this.onLayoutChange.bind(this);
+    this.onResizeStop = this.onResizeStop.bind(this);
+    this.resizeChartDone = this.resizeChartDone.bind(this);
+
   }
 
   state = {
@@ -110,6 +113,7 @@ export default class ToolboxLayout extends React.Component {
     isToolboxOpened: false,
     compactType: "vertical",
     mounted: false,
+    tainted: null,
     layouts: JSON.parse(JSON.stringify(getLayoutsFromLS("layouts") || {lg:[
       { i: "a", x: 0, y: 0, w: 3, h: 6, minW: 2, minH: 3, title:C01.title.text, chartType: "C01" },
       { i: "b", x: 3, y: 0, w: 3, h: 6, minW: 2, minH: 3, title:T1.title.text, chartType: "T1" },
@@ -131,6 +135,14 @@ export default class ToolboxLayout extends React.Component {
       { i: "g", x: 0, y: 0, w: 3, h: 6, minW: 2, minH: 3, title:C01.title.text, chartType: "C01" }
     ]
   };
+
+  resizeChartDone() {
+    this.setState({ tainted: null });
+  }
+  
+  onResizeStop(layout, oldItem, newItem, placeholder, e, element) {
+    this.setState({ tainted: oldItem.i });
+  }
 
   componentDidMount() {
     this.setState({ mounted: true });
@@ -258,6 +270,7 @@ export default class ToolboxLayout extends React.Component {
   };
 
   render() {
+    const { tainted } = this.state;
     const { toggleEvent } = this.props;
     return (
       <>
@@ -289,6 +302,7 @@ export default class ToolboxLayout extends React.Component {
             useCSSTransforms={this.state.mounted}
             compactType={this.state.compactType}
             preventCollision={!this.state.compactType}
+            onResizeStop={this.onResizeStop}
           >
           {this.state.layouts.lg.map((item, index) => {
             let { i, chartType, ...dataGrid } = item;
@@ -301,6 +315,7 @@ export default class ToolboxLayout extends React.Component {
                 <Chart
                   resizeDone={this.resizeChartDone}
                   chartType={chartType}
+                    resize={tainted === i || tainted === "all"}
                 />
               </div>
             );
