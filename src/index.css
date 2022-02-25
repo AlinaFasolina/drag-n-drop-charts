@@ -10,15 +10,15 @@
 
   .dark .toolbar-wrapper .react-grid-item{
     @apply bg-night-100;
-    box-shadow: 5px 5px 10px #11131f, -5px -5px 10px #252943; 
+    box-shadow:5px 5px 10px #11131f, -5px -5px 10px #252943; 
   } 
 
-  body:not(.dark) .toolbar-wrapper .highcharts-title {
-    @apply fill-black !important dark:fill-night-400;
+  body:not(.dark) .toolbar-wrapper .react-grid-item .highcharts-title {
+    @apply fill-black !important;
   }
 
   .dark .toolbar-wrapper .highcharts-title {
-    @apply fill-night-400;
+    @apply fill-night-400 !important;
   }
 
   body:not(.dark) .toolbar-wrapper .highcharts-background {
