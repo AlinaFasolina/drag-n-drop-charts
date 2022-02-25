@@ -19,22 +19,22 @@ const SideBar = () => {
 
           <Divider />
           
-          <Link to="wiki">
-            <SideBarIcon icon={<WikiIcon size="27" />} />
+          <Link to="wiki" >
+            <SideBarIcon text = 'Wiki' icon={<WikiIcon size="27" />} />
           </Link>
 
-          <Link to="faq">
-            <SideBarIcon icon={<FaQuestion size="20" />} />
+          <Link to="faq" >
+            <SideBarIcon text = 'FAQ' icon={<FaQuestion size="20" />} />
           </Link>
 
           <Divider />
 
           <Link to="contact" >
-            <SideBarIcon icon={<ContactIcon size="32" />} />
+            <SideBarIcon  text = 'Contact' icon={<ContactIcon size="32" />} />
           </Link>
 
-          <Link to="settings">
-            <SideBarIcon icon={<BsGearFill size="22" />} />
+          <Link to="settings"  >
+            <SideBarIcon text = 'Settings' icon={<BsGearFill size="22" />} />
           </Link>        
           <Divider />
         </div>
