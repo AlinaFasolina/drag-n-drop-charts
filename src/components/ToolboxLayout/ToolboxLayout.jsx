@@ -274,7 +274,7 @@ export default class ToolboxLayout extends React.Component {
     const { toggleEvent } = this.props;
     return (
       <>
-        <div>
+        <div className="toolbar-wrapper">
           <SlideToggle toggleEvent={toggleEvent} collapsed>
             {({ setCollapsibleElement }) => (
               <div className="my-collapsible">
