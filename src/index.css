@@ -4,13 +4,11 @@
 
 @layer components {
   .toolbar-wrapper .react-grid-item{
-    @apply bg-white;
-    box-shadow: 5px 5px 10px #c5c5c5, -5px -5px 10px #c5c5c5; 
+    @apply cursor-move cursor-grabbing bg-white rounded-3xl shadow-[5px_5px_10px_#c5c5c5];
   } 
 
   .dark .toolbar-wrapper .react-grid-item{
-    @apply bg-night-100;
-    box-shadow:5px 5px 10px #11131f, -5px -5px 10px #252943; 
+    @apply bg-night-100 shadow-[5px_5px_10px_#11131f];
   } 
 
   body:not(.dark) .toolbar-wrapper .react-grid-item .highcharts-title {
@@ -61,7 +59,6 @@
     border border-gray-200 dark:border-gray-800 rounded-full
     mx-2;
   }
-
 
   .top-navigation-icon {
     @apply relative flex items-center justify-center 
@@ -114,5 +111,9 @@
 
   .hide-button {
     @apply absolute text-2xl w-4 m-0 -top-1.5 text-black right-5 cursor-pointer
+  }
+
+  .react-grid-item > :not(.react-resizable-handle):not(.hide-button) {
+    @apply w-full h-full m-5 max-w-[calc(100%-40px)] max-h-[calc(100%-40px)]
   }
 }
