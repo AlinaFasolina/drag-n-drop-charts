@@ -15,6 +15,14 @@
     @apply fill-black !important;
   }
 
+  body:not(.dark) .toolbar-wrapper .react-grid-item span:not(.highcharts-axis-title) {
+    @apply text-[#333] mt-4 flex !important;
+  }
+
+  .dark .toolbar-wrapper .react-grid-item span:not(.highcharts-axis-title) {
+    @apply mt-4 flex !important;
+  }
+
   .dark .toolbar-wrapper .highcharts-title {
     @apply fill-night-400 !important;
   }
@@ -116,4 +124,6 @@
   .react-grid-item > :not(.react-resizable-handle):not(.hide-button) {
     @apply w-full h-full m-5 max-w-[calc(100%-40px)] max-h-[calc(100%-40px)]
   }
+
+
 }
