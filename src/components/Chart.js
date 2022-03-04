@@ -17,6 +17,7 @@ HC_data(Highcharts);
 const options = { C01, T1, T3, SC1 };
 
 class Chart extends React.Component {
+  intervalId;
   constructor(props) {
     super(props);
     this.setChartInstance = this.setChartInstance.bind(this);
@@ -38,6 +39,23 @@ class Chart extends React.Component {
     this.chart.setSize(null, null);
   }
 
+  /*function is executed when user changes date in date slider inside card. It stops drag and drop event of card*/ 
+  stopCardDrag(event) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  componentDidMount() {
+    /*we check with interval when slider element is mounted in DOM , then call "stopCardDrag" function, and stop checking. */
+    this.intervalId = setInterval(()=>{
+      const dateSlider = document.getElementsByClassName('highcharts-navigator')[0] ;
+      if (dateSlider) {
+        dateSlider.addEventListener('mousedown', this.stopCardDrag); 
+        clearInterval(this.intervalId);
+      }
+    },1000)
+  }
+  
   render() {
     return (
       <HighchartsReact
