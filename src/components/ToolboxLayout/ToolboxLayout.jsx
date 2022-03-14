@@ -321,7 +321,7 @@ export default class ToolboxLayout extends React.Component {
             compactType={this.state.compactType}
             preventCollision={!this.state.compactType}
             onResizeStop={this.onResizeStop}
-            draggableCancel={'.highcharts-series-group'}
+            draggableCancel={['.highcharts-background', '.highcharts-series', '.highcharts-markers']}
           >
           {this.state.layouts.lg.map((item, index) => {
             let { i, chartType, constructorType, ...dataGrid } = item;
