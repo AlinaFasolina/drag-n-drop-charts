@@ -114,15 +114,15 @@ export default class ToolboxLayout extends React.Component {
     compactType: "vertical",
     mounted: false,
     tainted: null,
-    layouts: JSON.parse(JSON.stringify(getLayoutsFromLS("layout") || {lg:[
-      { i: "a", x: 0, y: 0, w: 3, h: 6, minW: 2, minH: 3, title:C01.title.text, chartType: "C01", constructorType:"chart"},
-      { i: "c", x: 3, y: 0, w: 3, h: 6, minW: 2, minH: 3, title:C01.title.text, chartType: "C01", constructorType:"chart" },
-      { i: "d", x: 6, y: 0, w: 3, h: 6, minW: 2, minH: 3, title:T1.title.text, chartType: "T1", constructorType:"chart" },
-      { i: "e", x: 0, y: 0, w: 3, h: 6, minW: 2, minH: 3, title:T3.title.text, chartType: "T3" , constructorType:"chart"},
-      { i: "f", x: 3, y: 0, w: 3, h: 6, minW: 2, minH: 3, title:T3.title.text, chartType: "T3" , constructorType:"chart"},
-      { i: "h", x: 6, y: 0, w: 3, h: 6, minW: 2, minH: 3, title:T3.title.text, chartType: "SC1" , constructorType:"stockChart"},
+    layouts: JSON.parse(JSON.stringify(getLayoutsFromLS("layouts") || {lg:[
+      { i: "a", x: 0, y: 0, w: 3, h: 6, minW: 2, minH: 3, title: C01.title.text, chartType: "C01", constructorType:"chart"},
+      { i: "c", x: 3, y: 0, w: 3, h: 6, minW: 2, minH: 3, title: C01.title.text, chartType: "C01", constructorType:"chart" },
+      { i: "d", x: 6, y: 0, w: 3, h: 6, minW: 2, minH: 3, title: T1.title.text, chartType: "T1", constructorType:"chart" },
+      { i: "e", x: 0, y: 0, w: 3, h: 6, minW: 2, minH: 3, title: T3.title.text, chartType: "T3" , constructorType:"chart"},
+      { i: "f", x: 3, y: 0, w: 3, h: 6, minW: 2, minH: 3, title: T3.title.text, chartType: "T3" , constructorType:"chart"},
+      { i: "h", x: 6, y: 0, w: 3, h: 6, minW: 2, minH: 3, title: T3.title.text, chartType: "SC1" , constructorType:"stockChart"},
     ]})),
-    toolbox: JSON.parse(JSON.stringify(getToolboxFromLS("toolbox") ||  { lg: [{ i: "g", x: 0, y: 0, w: 3, h: 6, minW: 2, minH: 3, title:C01.title.text, chartType: "C01", constructorType:"chart" }] })),
+    toolbox: JSON.parse(JSON.stringify(getToolboxFromLS("toolbox") ||  { lg: [{ i: "g", x: 0, y: 0, w: 3, h: 6, minW: 2, minH: 3, title: C01.title.text, chartType: "C01", constructorType:"chart" }] })),
 
    //basicCharts array is not rendering. It's used only in "addChartTypeToArray" function to get proper "chartType" field. We render layouts and toolbox arrays.
     
@@ -134,7 +134,6 @@ export default class ToolboxLayout extends React.Component {
       { i: "f", x: 3, y: 0, w: 3, h: 6, minW: 2, minH: 3, title:T3.title.text, chartType: "T3" , constructorType:"chart"},
       { i: "h", x: 6, y: 0, w: 3, h: 6, minW: 2, minH: 3, title:T3.title.text, chartType: "SC1" , constructorType:"stockChart"},
       { i: "g", x: 0, y: 0, w: 3, h: 6, minW: 2, minH: 3, title:C01.title.text, chartType: "C01", constructorType:"chart" },
-
     ]
   };
 
@@ -218,8 +217,6 @@ export default class ToolboxLayout extends React.Component {
 
     let newArr = [...arr];
 
-    console.log(newArr)
-
     // arr.forEach(item => {
     //   const finded = this.state.basicCharts.find((chart)=> chart.i === item.i)
     //   newArr.push({...finded,...item})
@@ -279,8 +276,10 @@ export default class ToolboxLayout extends React.Component {
     /*add "chartType" field to array with changed cards positions*/
     let arrWithChartType= this.addChartTypeToArray(layouts.lg);
 
+    // console.log(arrWithChartType)
+
     /*set array with "chartType" field to localstorage*/
-    saveLayoutsToLS("layouts", {lg:arrWithChartType});
+    // saveLayoutsToLS("layouts", {lg:arrWithChartType});
   };
 
   onNewLayout = () => {
