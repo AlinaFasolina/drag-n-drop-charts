@@ -114,7 +114,7 @@ export default class ToolboxLayout extends React.Component {
     compactType: "vertical",
     mounted: false,
     tainted: null,
-    layouts: JSON.parse(JSON.stringify(getLayoutsFromLS("layouts") || {lg:[
+    layouts: JSON.parse(JSON.stringify(getLayoutsFromLS("layout") || {lg:[
       { i: "a", x: 0, y: 0, w: 3, h: 6, minW: 2, minH: 3, title:C01.title.text, chartType: "C01", constructorType:"chart"},
       { i: "c", x: 3, y: 0, w: 3, h: 6, minW: 2, minH: 3, title:C01.title.text, chartType: "C01", constructorType:"chart" },
       { i: "d", x: 6, y: 0, w: 3, h: 6, minW: 2, minH: 3, title:T1.title.text, chartType: "T1", constructorType:"chart" },
@@ -217,9 +217,15 @@ export default class ToolboxLayout extends React.Component {
     const max = 6
 
     let newArr = [...arr];
+
+    console.log(newArr)
+
+    // arr.forEach(item => {
+    //   const finded = this.state.basicCharts.find((chart)=> chart.i === item.i)
+    //   newArr.push({...finded,...item})
+    // })
     newArr.forEach((item, index)=> {
-      // const finded = this.state.basicCharts.find((chart)=> chart.i === item.i)
-      if(index === 0) {
+    if(index === 0) {
         item.x = 0
       } else if(item.x - newArr[index - 1].x != step) {
         if(newArr[index - 1].x + step <= max){
@@ -228,7 +234,6 @@ export default class ToolboxLayout extends React.Component {
           item.x = 0
         }
       }
-      // newArr.push({...finded,...item})
     })
     return newArr
   }
