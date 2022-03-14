@@ -213,10 +213,22 @@ export default class ToolboxLayout extends React.Component {
 
   // Function wich converts array with no "chartType" field to array with "chartType" field
   addChartTypeToArray = arr => {
-    let newArr = [];
-    arr.forEach((item)=> {
-      const finded = this.state.basicCharts.find((chart)=> chart.i === item.i)
-      newArr.push({...finded,...item})
+    const step = 3
+    const max = 6
+
+    let newArr = [...arr];
+    newArr.forEach((item, index)=> {
+      // const finded = this.state.basicCharts.find((chart)=> chart.i === item.i)
+      if(index === 0) {
+        item.x = 0
+      } else if(item.x - newArr[index - 1].x != step) {
+        if(newArr[index - 1].x + step <= max){
+          item.x = newArr[index - 1].x + step
+        }else {
+          item.x = 0
+        }
+      }
+      // newArr.push({...finded,...item})
     })
     return newArr
   }
