@@ -31,7 +31,7 @@ class Chart extends React.Component {
   }
 
   setChartInstance(chart) {
-    console.log(chart);
+    // console.log(chart);
     this.chart = chart;
   }
 

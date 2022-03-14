@@ -301,10 +301,10 @@ export default class ToolboxLayout extends React.Component {
                   ref={setCollapsibleElement}
                 >
                   <div className="my-collapsible__content-inner">
-                  <ToolBox
-                items={this.state.toolbox[this.state.currentBreakpoint] || []}
-              onTakeItem={this.onTakeItem}
-              />
+                    <ToolBox
+                      items={this.state.toolbox[this.state.currentBreakpoint] || []}
+                      onTakeItem={this.onTakeItem}
+                    />
                   </div>
                 </div>
               </div>
@@ -321,6 +321,7 @@ export default class ToolboxLayout extends React.Component {
             compactType={this.state.compactType}
             preventCollision={!this.state.compactType}
             onResizeStop={this.onResizeStop}
+            draggableCancel={'.highcharts-series-group'}
           >
           {this.state.layouts.lg.map((item, index) => {
             let { i, chartType, constructorType, ...dataGrid } = item;
@@ -334,7 +335,7 @@ export default class ToolboxLayout extends React.Component {
                   resizeDone={this.resizeChartDone}
                   chartType={chartType}
                   constructorType={constructorType}
-                    resize={tainted === i || tainted === "all"}
+                  resize={tainted === i || tainted === "all"}
                 />
               </div>
             );
