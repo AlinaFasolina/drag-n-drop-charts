@@ -115,12 +115,12 @@ export default class ToolboxLayout extends React.Component {
     mounted: false,
     tainted: null,
     layouts: JSON.parse(JSON.stringify(getLayoutsFromLS("layouts") || {lg:[
-      { i: "a", x: 0, y: 0, w: 3, h: 6, minW: 2, minH: 3, title: C01.title.text, chartType: "C01", constructorType:"chart"},
-      { i: "c", x: 3, y: 0, w: 3, h: 6, minW: 2, minH: 3, title: C01.title.text, chartType: "C01", constructorType:"chart" },
+      { i: "a", x: 0, y: 0, w: 6, h: 6, minW: 2, minH: 3, title: C01.title.text, chartType: "C01", constructorType:"chart"},
+      { i: "c", x: 6, y: 0, w: 3, h: 6, minW: 2, minH: 3, title: C01.title.text, chartType: "C01", constructorType:"chart" },
       { i: "d", x: 6, y: 0, w: 3, h: 6, minW: 2, minH: 3, title: T1.title.text, chartType: "T1", constructorType:"chart" },
-      { i: "e", x: 0, y: 0, w: 3, h: 6, minW: 2, minH: 3, title: T3.title.text, chartType: "T3" , constructorType:"chart"},
-      { i: "f", x: 3, y: 0, w: 3, h: 6, minW: 2, minH: 3, title: T3.title.text, chartType: "T3" , constructorType:"chart"},
-      { i: "h", x: 6, y: 0, w: 3, h: 6, minW: 2, minH: 3, title: T3.title.text, chartType: "SC1" , constructorType:"stockChart"},
+      { i: "e", x: 3, y: 0, w: 3, h: 6, minW: 2, minH: 3, title: T3.title.text, chartType: "T3" , constructorType:"chart"},
+      { i: "f", x: 6, y: 0, w: 3, h: 6, minW: 2, minH: 3, title: T3.title.text, chartType: "T3" , constructorType:"chart"},
+      { i: "h", x: 0, y: 0, w: 3, h: 6, minW: 2, minH: 3, title: T3.title.text, chartType: "SC1" , constructorType:"stockChart"},
     ]})),
     toolbox: JSON.parse(JSON.stringify(getToolboxFromLS("toolbox") ||  { lg: [{ i: "g", x: 0, y: 0, w: 3, h: 6, minW: 2, minH: 3, title: C01.title.text, chartType: "C01", constructorType:"chart" }] })),
 
@@ -140,9 +140,27 @@ export default class ToolboxLayout extends React.Component {
   resizeChartDone() {
     this.setState({ tainted: null });
   }
+
   
   onResizeStop(layout, oldItem, newItem, placeholder, e, element) {
     this.setState({ tainted: oldItem.i });
+    let newArr = [...this.state.layouts.lg]
+    newArr.forEach(el => {
+      if(el.i === newItem.i) {
+        el.w = newItem.w
+        el.h = newItem.h
+      }
+    })
+    this.setState(prevState => {
+      return {
+        ...prevState,
+        layouts: {
+          lg: newArr
+        },
+      };
+    });
+
+    saveLayoutsToLS("layouts", {lg: newArr});
   }
 
   componentDidMount() {
@@ -224,8 +242,12 @@ export default class ToolboxLayout extends React.Component {
     let multiIndex = 0
 
     newArr.forEach((item, index) => {
-      if(multiIndex * 3 <= max) {
-        item.x = multiIndex * step
+      if(multiIndex * step <= max) {
+        if(index > 0) {
+          item.x = newArr[index - 1].w * multiIndex
+        }else {
+          item.x = 0
+        }
       }else {
         item.x = 0
         multiIndex = 0
@@ -236,23 +258,28 @@ export default class ToolboxLayout extends React.Component {
   }
 
   removeChartFromArray = arr => {
-    const step = 3
     const max = 6
+    const step = 3
 
     let newArr = [...arr]
 
     newArr.forEach((item, index) => {
       if(index === 0) {
-          item.x = 0
-        } else if(item.x - newArr[index - 1].x != step) {
-          if(newArr[index - 1].x + step <= max){
-            item.x = newArr[index - 1].x + step
-          }else {
+        item.x = 0
+        item.y = 0
+      } else {
+        const formula = newArr[index - 1].x + (newArr[index - 1].w - newArr[index - 1].x) 
+        if(newArr[index - 1].x + step <= max) { 
+          if(newArr[index - 1].w >= max && newArr[index - 1].x >= step) {
             item.x = 0
+          }else {
+            item.x = formula
           }
+        } else {
+          item.x = 0
         }
       }
-    )
+    })
     return newArr
   }
 
@@ -294,8 +321,10 @@ export default class ToolboxLayout extends React.Component {
   };
 
   onLayoutChange = (layout, layouts) => {
+    console.log(layouts)
     /*add "chartType" field to array with changed cards positions*/
-    let arrWithChartType= this.addChartTypeToArray(layouts.lg);
+    
+    let arrWithChartType = this.removeChartFromArray(layouts.lg);
 
     // console.log(arrWithChartType)
 
@@ -345,7 +374,7 @@ export default class ToolboxLayout extends React.Component {
             draggableCancel={['.highcharts-background', '.highcharts-series', '.highcharts-markers']}
           >
           {this.state.layouts.lg.map((item, index) => {
-            let { i, chartType, constructorType, ...dataGrid } = item;
+            let { i, chartType, constructorType, ...dataGrid } = item
             return (
               <div key={i} data-grid={{ ...dataGrid }}>
                 <div className="hide-button"
