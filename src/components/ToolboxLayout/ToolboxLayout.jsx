@@ -178,7 +178,7 @@ export default class ToolboxLayout extends React.Component {
     const layoutsArray = this.state.layouts.lg;
 
     /*add clicked toolbox item to "layouts" array*/
-    const newLayoutsArr = [...layoutsArray, item];
+    const newLayoutsArr = [item, ...layoutsArray];
 
     /*add "chartType" field to "layouts" array*/
     let layoutsArrWithChartType= this.addChartTypeToArray(newLayoutsArr);
@@ -187,7 +187,7 @@ export default class ToolboxLayout extends React.Component {
     const newToolboxArr = this.state.toolbox.lg.filter((chart)=> chart.i !== item.i);
 
     /*add "chartType" field to "toolbox" array*/
-    let toolboxArrWithChartType= this.addChartTypeToArray(newToolboxArr);
+    let toolboxArrWithChartType= this.removeChartFromArray(newToolboxArr);
 
     /*update "layouts" and "toolbox" array in state to cause new render*/ 
     this.setState(prevState => {
@@ -221,17 +221,38 @@ export default class ToolboxLayout extends React.Component {
     //   const finded = this.state.basicCharts.find((chart)=> chart.i === item.i)
     //   newArr.push({...finded,...item})
     // })
-    newArr.forEach((item, index)=> {
-    if(index === 0) {
+    let multiIndex = 0
+
+    newArr.forEach((item, index) => {
+      if(multiIndex * 3 <= max) {
+        item.x = multiIndex * step
+      }else {
         item.x = 0
-      } else if(item.x - newArr[index - 1].x != step) {
-        if(newArr[index - 1].x + step <= max){
-          item.x = newArr[index - 1].x + step
-        }else {
+        multiIndex = 0
+      }
+      multiIndex++
+    })
+    return newArr
+  }
+
+  removeChartFromArray = arr => {
+    const step = 3
+    const max = 6
+
+    let newArr = [...arr]
+
+    newArr.forEach((item, index) => {
+      if(index === 0) {
           item.x = 0
+        } else if(item.x - newArr[index - 1].x != step) {
+          if(newArr[index - 1].x + step <= max){
+            item.x = newArr[index - 1].x + step
+          }else {
+            item.x = 0
+          }
         }
       }
-    })
+    )
     return newArr
   }
 
@@ -243,13 +264,13 @@ export default class ToolboxLayout extends React.Component {
     const filteredLayoutsArray = layoutsArray.filter((chart)=>chart.i !== item.i)
 
     /*add "chartType" field to filtered layouts array*/
-    let layoutsArrWithChartType= this.addChartTypeToArray(filteredLayoutsArray);
+    let layoutsArrWithChartType = this.addChartTypeToArray(filteredLayoutsArray);
 
     /*add closed card to toolbox array*/
     let newToolboxArr = [...this.state.toolbox.lg,item];
 
     /*add "chartType" field to toolbox array*/
-    let toolboxArrWithChartType= this.addChartTypeToArray(newToolboxArr);
+    let toolboxArrWithChartType= this.removeChartFromArray(newToolboxArr);
 
     /*update "layouts" and "toolbox" array in state to cause new render*/ 
     this.setState(prevState => {
