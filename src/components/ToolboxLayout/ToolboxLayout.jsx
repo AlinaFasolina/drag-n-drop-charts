@@ -190,11 +190,21 @@ export default class ToolboxLayout extends React.Component {
 
   // When user clicks on toolbox item
   onTakeItem = item => {
-    // console.log('layouts in onTakeItem', JSON.parse(JSON.stringify(getLayoutsFromLS("layouts"))).lg);
-    const layoutsArray2 = JSON.parse(JSON.stringify(getLayoutsFromLS("layouts"))).lg;
+
+
+    
+    
+
+    console.log('layouts in onTakeItem', JSON.parse(JSON.stringify(getLayoutsFromLS("layouts"))).lg);
+    const layoutsArray2 = JSON.parse(JSON.stringify(getLayoutsFromLS("layouts"))).lg ;
     const elementsOfFirstRow = layoutsArray2.filter((item)=> item.y===0);
+    
+
     const elementsOfSecondRow = layoutsArray2.filter((item)=> item.y===6);
+
     const elementsOfThirdRow = layoutsArray2.filter((item)=> item.y===12);
+
+    const elementsOfFourthRow = layoutsArray2.filter((item)=> item.y===18);
 
 
     // make an array with width of elements in first row
@@ -210,13 +220,13 @@ export default class ToolboxLayout extends React.Component {
     const summaryWidthofElementsInSecondRow = arrayOfWidthOfElementsInSecondRow.reduce((sum, current) => sum + current, 0);
 
     // make an array with width of elements in third row
-    const arrayOfWidthOfElementsInThirdRow = elementsOfSecondRow.map((item) => item.w);
+    const arrayOfWidthOfElementsInThirdRow = elementsOfThirdRow.map((item) => item.w);
 
     // count sum of width of elements in third row
     const summaryWidthofElementsInThirdRow = arrayOfWidthOfElementsInThirdRow.reduce((sum, current) => sum + current, 0);
 
     // make an array with width of elements in fourth row
-    const arrayOfWidthOfElementsInFourthRow = elementsOfSecondRow.map((item) => item.w);
+    const arrayOfWidthOfElementsInFourthRow = elementsOfFourthRow.map((item) => item.w);
 
     // count sum of width of elements in fourth row
     const summaryWidthofElementsInFourthRow = arrayOfWidthOfElementsInFourthRow.reduce((sum, current) => sum + current, 0);
@@ -298,9 +308,9 @@ export default class ToolboxLayout extends React.Component {
     return newArr
   }
 
-  // Function which сlears x and y positions of items and set width to default size.
-  clearPositionAndSetDefaultWidth = arr => {
-    let result = arr.map(item => true ? {...item, x:0, y:0, w:3} : item)
+  // Function which sets default width(3) and height(6) to card*/.
+  setDefaultCardSize = arr => {
+    let result = arr.map(item => true ? {...item, w:3, h:6} : item)
     return result
   }
 
@@ -320,8 +330,8 @@ export default class ToolboxLayout extends React.Component {
     /*add "chartType" field to toolbox array*/
     let toolboxArrWithChartType= this.addChartTypeToArray(newToolboxArr);
 
-    /*clear x and y position of toolboxes*/
-    // let clearedPositionsArray = this.clearPositionAndSetDefaultWidth(toolboxArrWithChartType)
+    /*set default width(3) and height(6) to card*/
+    let defaultSizeToolboxArr = this.setDefaultCardSize(toolboxArrWithChartType)
 
     /*update "layouts" and "toolbox" array in state to cause new render*/ 
     this.setState(prevState => {
@@ -331,7 +341,7 @@ export default class ToolboxLayout extends React.Component {
           lg: layoutsArrWithChartType          
         },
         toolbox: {
-          lg: toolboxArrWithChartType
+          lg: defaultSizeToolboxArr
         },
       };
     });
@@ -340,7 +350,7 @@ export default class ToolboxLayout extends React.Component {
     saveLayoutsToLS("layouts", {lg:layoutsArrWithChartType});
 
     /*set toolbox array with "chartType" field to localstorage*/
-    saveToolboxToLS("toolbox", {lg:toolboxArrWithChartType});
+    saveToolboxToLS("toolbox", {lg:defaultSizeToolboxArr});
 
   };
 
